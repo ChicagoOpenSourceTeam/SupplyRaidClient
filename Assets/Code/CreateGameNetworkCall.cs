@@ -3,8 +3,11 @@ using System.Collections;
 using System.Text;
 using UnityEngine.UI;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 public class CreateGameNetworkCall : MonoBehaviour {
+
+	public const int SCENE_HOST_USER_NAME = 2;
 
 	public InputField field;
 	string baseUrl;
@@ -33,6 +36,10 @@ public class CreateGameNetworkCall : MonoBehaviour {
 		webRequest.SetRequestHeader ("Content-Type", "application/json");
 
 		yield return webRequest.Send ();
+
+		if (webRequest.responseCode == 200) {
+			SceneManager.LoadScene (SCENE_HOST_USER_NAME);
+		}
 	}
 
 	public void onClick() {
