@@ -33,7 +33,13 @@ public class CreateGameNetworkCall : MonoBehaviour {
 
 	public IEnumerator upload() {
 		UnityWebRequest webRequest = new UnityWebRequest (baseUrl + "/game", UnityWebRequest.kHttpVerbPOST);
-		UploadHandler uploadHandler = new UploadHandlerRaw (Encoding.UTF8.GetBytes("{\"gameName\":\""+field.text+"\"}"));
+		CreateGameRequest createGameRequest = new CreateGameRequest ();
+		createGameRequest.gameName = field.text;
+		string json = JsonUtility.ToJson (createGameRequest);
+
+		Debug.Log (json);
+
+		UploadHandler uploadHandler = new UploadHandlerRaw (Encoding.UTF8.GetBytes(json));
 		DownloadHandler downloadHandler = new DownloadHandlerBuffer ();
 		webRequest.uploadHandler = uploadHandler;
 		webRequest.downloadHandler = downloadHandler;
@@ -54,5 +60,9 @@ public class CreateGameNetworkCall : MonoBehaviour {
 	public void onClick() {
 		StartCoroutine(upload ());
 		return;
+	}
+
+	public class CreateGameRequest {
+		public string gameName;
 	}
 }
