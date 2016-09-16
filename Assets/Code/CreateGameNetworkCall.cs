@@ -8,6 +8,8 @@ using UnityEngine.SceneManagement;
 public class CreateGameNetworkCall : MonoBehaviour {
 
 	public const int SCENE_HOST_USER_NAME = 2;
+	public GameObject errorDialog;
+	public DisplayErrorDialog displayErrorDialog;
 
 	public InputField field;
 	string baseUrl;
@@ -19,6 +21,8 @@ public class CreateGameNetworkCall : MonoBehaviour {
 		#elif UNITY_WEBGL
 			baseUrl = "http://supply-attack-server.herokuapp.com";
 		#endif
+
+		displayErrorDialog = errorDialog.GetComponent<DisplayErrorDialog> ();
 	}
 	
 	// Update is called once per frame
@@ -39,7 +43,12 @@ public class CreateGameNetworkCall : MonoBehaviour {
 
 		if (webRequest.responseCode == 200) {
 			SceneManager.LoadScene (SCENE_HOST_USER_NAME);
+		} else if (webRequest.responseCode == 409) {
+			displayErrorDialog.displayErrorMessage ("Game name already taken.");
+		} else {
+			displayErrorDialog.displayErrorMessage ("Unknown error. Try again later.");
 		}
+
 	}
 
 	public void onClick() {
