@@ -9,7 +9,8 @@ public class CreateGameNetworkCall : MonoBehaviour {
 
 	public const int SCENE_HOST_USER_NAME = 2;
 	public GameObject errorDialog;
-	public DisplayErrorDialog displayErrorDialog;
+	private DisplayErrorDialog displayErrorDialog;
+    public Button button;
 
 	public InputField field;
 	string baseUrl;
@@ -32,6 +33,7 @@ public class CreateGameNetworkCall : MonoBehaviour {
 
 
 	public IEnumerator upload() {
+        Debug.Log("Button Clicked. ");
 		UnityWebRequest webRequest = new UnityWebRequest (baseUrl + "/game", UnityWebRequest.kHttpVerbPOST);
 		UploadHandler uploadHandler = new UploadHandlerRaw (Encoding.UTF8.GetBytes("{\"gameName\":\""+field.text+"\"}"));
 		DownloadHandler downloadHandler = new DownloadHandlerBuffer ();
@@ -52,7 +54,10 @@ public class CreateGameNetworkCall : MonoBehaviour {
 	}
 
 	public void onClick() {
+        button.enabled = false;
+
 		StartCoroutine(upload ());
+        button.enabled = true;
 		return;
 	}
 }
