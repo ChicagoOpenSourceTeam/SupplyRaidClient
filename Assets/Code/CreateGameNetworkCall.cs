@@ -51,7 +51,8 @@ public class CreateGameNetworkCall : MonoBehaviour {
 
 		if (webRequest.responseCode == 200) {
 			SceneManager.LoadScene (SCENE_HOST_USER_NAME);
-		} else if (webRequest.responseCode == 409) {
+        }
+        else if (webRequest.responseCode == 409) {
 			displayErrorDialog.displayErrorMessage ("Game name already taken.");
 		} else {
 			displayErrorDialog.displayErrorMessage ("Unknown error. Try again later.");
@@ -71,3 +72,7 @@ public class CreateGameNetworkCall : MonoBehaviour {
 		public string gameName;
 	}
 }
+
+
+
+
