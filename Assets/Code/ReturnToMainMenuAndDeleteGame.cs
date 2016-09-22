@@ -29,13 +29,11 @@ public class ReturnToMainMenuAndDeleteGame : MonoBehaviour {
 
         Debug.Log("Server responded");
 
-        if (webRequest.responseCode == 200)
+        if (webRequest.responseCode == 200 || webRequest.responseCode == 404)
         {
             Debug.Log("Success!");
             SceneManager.LoadScene(SCENE_MAIN_MENU);
         }
-
-        // || webRequest.responseCode == 404
 
     }
 
