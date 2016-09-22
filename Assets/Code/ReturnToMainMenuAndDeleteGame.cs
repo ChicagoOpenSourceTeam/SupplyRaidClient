@@ -17,7 +17,7 @@ public class ReturnToMainMenuAndDeleteGame : MonoBehaviour {
 
     private IEnumerator delete() {
         Debug.Log("Delete Called");
-        string gameName = PlayerPrefs.GetString("gameName");
+        string gameName = PlayerPrefs.GetString(CreateGameNetworkCall.GAME_NAME_KEY);
 
         UnityWebRequest webRequest = new UnityWebRequest(baseUrl + "/game/" + gameName, UnityWebRequest.kHttpVerbDELETE);
         

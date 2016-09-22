@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 public class CreateGameNetworkCall : MonoBehaviour {
 
 	public const int SCENE_HOST_USER_NAME = 2;
+    public static string GAME_NAME_KEY = "gameName";
 
     string baseUrl;
     public GameObject errorDialog;
@@ -48,7 +49,7 @@ public class CreateGameNetworkCall : MonoBehaviour {
 		yield return webRequest.Send ();
 
 		if (webRequest.responseCode == 200) {
-            PlayerPrefs.SetString("gameName", createGameRequest.gameName);
+            PlayerPrefs.SetString(GAME_NAME_KEY, createGameRequest.gameName);
 			SceneManager.LoadScene (SCENE_HOST_USER_NAME);
         }
         else if (webRequest.responseCode == 409) {
