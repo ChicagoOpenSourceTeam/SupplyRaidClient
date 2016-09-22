@@ -8,12 +8,13 @@ using UnityEngine.SceneManagement;
 public class CreateGameNetworkCall : MonoBehaviour {
 
 	public const int SCENE_HOST_USER_NAME = 2;
-	public GameObject errorDialog;
+
+    string baseUrl;
+    public GameObject errorDialog;
 	private DisplayErrorDialog displayErrorDialog;
     public Button button;
-
 	public InputField field;
-	string baseUrl;
+
 
 	// Use this for initialization
 	void Start () {

@@ -6,7 +6,6 @@ public class DisplayErrorDialog : MonoBehaviour {
 
 	public Text message;
 	public CanvasGroup canvasGroup;
-	private bool displayingMessage = true;
 
 	// Use this for initialization
 	void Start () {
