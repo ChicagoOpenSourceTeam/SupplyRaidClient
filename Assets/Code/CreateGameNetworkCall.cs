@@ -33,13 +33,10 @@ public class CreateGameNetworkCall : MonoBehaviour {
 
 
 	public IEnumerator upload() {
-        Debug.Log("Button Clicked. ");
 		UnityWebRequest webRequest = new UnityWebRequest (baseUrl + "/game", UnityWebRequest.kHttpVerbPOST);
 		CreateGameRequest createGameRequest = new CreateGameRequest ();
 		createGameRequest.gameName = field.text;
 		string json = JsonUtility.ToJson (createGameRequest);
-
-		Debug.Log (json);
 
 		UploadHandler uploadHandler = new UploadHandlerRaw (Encoding.UTF8.GetBytes(json));
 		DownloadHandler downloadHandler = new DownloadHandlerBuffer ();
@@ -50,6 +47,7 @@ public class CreateGameNetworkCall : MonoBehaviour {
 		yield return webRequest.Send ();
 
 		if (webRequest.responseCode == 200) {
+            PlayerPrefs.SetString("gameName", createGameRequest.gameName);
 			SceneManager.LoadScene (SCENE_HOST_USER_NAME);
         }
         else if (webRequest.responseCode == 409) {
