@@ -41,7 +41,7 @@ public class JoinGameAndEnterWaitingRoomOnSuccess : MonoBehaviour {
         }
         else if (webRequest.responseCode == 409)
         {
-            displayErrorDialog.displayErrorMessage("Player name already taken.");
+            displayErrorDialog.displayErrorMessage(Encoding.UTF8.GetString(webRequest.downloadHandler.data));
         }
 
         else if (webRequest.responseCode == 404)
