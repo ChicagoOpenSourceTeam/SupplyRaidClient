@@ -36,7 +36,7 @@ public class GetPlayersFromServer : MonoBehaviour {
 
 
 
-    private void download()
+	private void download()
     {
         Debug.Log("Inside download");
         UnityWebRequest webRequest = new UnityWebRequest(baseUrl + "/players", UnityWebRequest.kHttpVerbGET);
@@ -45,12 +45,25 @@ public class GetPlayersFromServer : MonoBehaviour {
         webRequest.SetRequestHeader("Content-Type", "application/json");
         webRequest.Send();
 
-    }
+		RESTClient<PlayerResponse> client = new RESTClient<PlayerResponse>();
+
+		client.SetEndpoint ("/players").SetMethods (UnityWebRequest.kHttpVerbGET).sendRequest();
+
+		client.handleResponse();
+
+		if (client.responseCode == 200) {
+			PlayerResponse[] playerResponses = JSONHelper.getJsonArray<PlayerResponse>(client.response);
+			Debug.Log (playerResponses [0].playerNumber);
+		}
+    }	
 
     // Update is called once per frame
     void Update () {
 	
 	}
 
-
+	public class PlayerResponse {
+		public string name {get; set;}
+		public int playerNumber {get; set;}
+	}
 }

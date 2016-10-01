@@ -9,7 +9,6 @@ public class JoinGameAndEnterWaitingRoomOnSuccess : MonoBehaviour {
 
     public const int SCENE_PLAYER_WAITING_ROOM = 3;
 
-    string baseUrl;
     public GameObject errorDialog;
     private DisplayErrorDialog displayErrorDialog;
     public Button button;
@@ -19,32 +18,34 @@ public class JoinGameAndEnterWaitingRoomOnSuccess : MonoBehaviour {
     // Use this for initialization
     public IEnumerator upload()
     {
-        UnityWebRequest webRequest = new UnityWebRequest(baseUrl + "/players", UnityWebRequest.kHttpVerbPOST);
         CreatePlayerRequest createPlayerRequest = new CreatePlayerRequest();
         createPlayerRequest.playerName = playerField.text;
         createPlayerRequest.gameName = gameField.text;
-        string json = JsonUtility.ToJson(createPlayerRequest);
 
-        UploadHandler uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(json));
-        DownloadHandler downloadHandler = new DownloadHandlerBuffer();
-        webRequest.uploadHandler = uploadHandler;
-        webRequest.downloadHandler = downloadHandler;
-        webRequest.SetRequestHeader("Content-Type", "application/json");
+		RESTClient<CreatePlayerRequest> client = new RESTClient<CreatePlayerRequest> ();
 
-        yield return webRequest.Send();
+		yield return client
+			.SetEndpoint ("/players")
+			.SetMethods (UnityWebRequest.kHttpVerbPOST)
+			.SetUploadData (createPlayerRequest)
+			.sendRequest();
+
+		client.handleResponse();
+
+		Debug.Log (client.responseCode);
 
         displayErrorDialog = errorDialog.GetComponent<DisplayErrorDialog>();
 
-        if (webRequest.responseCode == 200)
+        if (client.responseCode == 200)
         {
             SceneManager.LoadScene(SCENE_PLAYER_WAITING_ROOM);
         }
-        else if (webRequest.responseCode == 409)
+		else if (client.responseCode == 409)
         {
-            displayErrorDialog.displayErrorMessage(Encoding.UTF8.GetString(webRequest.downloadHandler.data));
+			displayErrorDialog.displayErrorMessage(client.response);
         }
 
-        else if (webRequest.responseCode == 404)
+		else if (client.responseCode == 404)
         {
             displayErrorDialog.displayErrorMessage("Game Not Found. Check spelling.");
         }
@@ -72,11 +73,6 @@ public class JoinGameAndEnterWaitingRoomOnSuccess : MonoBehaviour {
 
     void Start()
     {
-        #if UNITY_EDITOR
-                baseUrl = "http://localhost:8080";
-        #elif UNITY_WEBGL
-		        baseUrl = "http://supply-attack-server.herokuapp.com";
-        #endif
 
     }
 
