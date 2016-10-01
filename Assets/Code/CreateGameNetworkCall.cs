@@ -46,7 +46,7 @@ public class CreateGameNetworkCall : MonoBehaviour {
 		webRequest.downloadHandler = downloadHandler;
 		webRequest.SetRequestHeader ("Content-Type", "application/json");
 
-		yield return webRequest.Send ();
+		yield return webRequest.Send();
 
 		if (webRequest.responseCode == 200) {
             PlayerPrefs.SetString(GAME_NAME_KEY, createGameRequest.gameName);

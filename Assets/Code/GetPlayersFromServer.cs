@@ -2,12 +2,16 @@
 using System.Collections;
 using UnityEngine.Networking;
 using System;
+using System.Text;
+using Assets.Code;
+
 
 public class GetPlayersFromServer : MonoBehaviour {
 
     string baseUrl;
     public GameObject errorDialog;
     private DisplayErrorDialog displayErrorDialog;
+    private Player[] players;
 
     // Use this for initialization
     void Start () {
@@ -17,18 +21,15 @@ public class GetPlayersFromServer : MonoBehaviour {
         baseUrl = "http://supply-attack-server.herokuapp.com";
 #endif
 
-
         StartCoroutine(MakeGETCall());
 	}
 
-
+    
 
     private IEnumerator MakeGETCall()
     {
-        Debug.Log("Inside of Coroutine");
         while (true)
         {
-            Debug.Log("Inside of while loop.");
             download();
             yield return new WaitForSeconds(2);
         }
@@ -38,13 +39,24 @@ public class GetPlayersFromServer : MonoBehaviour {
 
     private void download()
     {
-        Debug.Log("Inside download");
         UnityWebRequest webRequest = new UnityWebRequest(baseUrl + "/players", UnityWebRequest.kHttpVerbGET);
+        webRequest.
         DownloadHandler downloadHandler = new DownloadHandlerBuffer();
         webRequest.downloadHandler = downloadHandler;
         webRequest.SetRequestHeader("Content-Type", "application/json");
         webRequest.Send();
 
+        Debug.Log(webRequest.responseCode);
+        Debug.Log((Encoding.UTF8.GetString(webRequest.downloadHandler.data)));
+        players = JsonHelper.getJsonArray<Player>(Encoding.UTF8.GetString(webRequest.downloadHandler.data));
+
+        printPlayer(players[0]);
+
+    }
+
+    public void printPlayer(Player playerInfo)
+    {
+        Debug.Log(playerInfo.name);
     }
 
     // Update is called once per frame
@@ -52,5 +64,13 @@ public class GetPlayersFromServer : MonoBehaviour {
 	
 	}
 
+
+}
+public class Player
+{
+    public int playerNumber;
+    public String name;
+    public String gameName;
+    public int playerId;
 
 }
