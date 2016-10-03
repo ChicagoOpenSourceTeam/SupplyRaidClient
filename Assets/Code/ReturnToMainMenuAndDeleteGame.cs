@@ -10,13 +10,11 @@ public class ReturnToMainMenuAndDeleteGame : MonoBehaviour {
 
     // Use this for initialization
     public void onClick() {
-        Debug.Log("onClick Called");
         StartCoroutine(delete());
     }
 
 
     private IEnumerator delete() {
-        Debug.Log("Delete Called");
         string gameName = PlayerPrefs.GetString(CreateGameNetworkCall.GAME_NAME_KEY);
 
         UnityWebRequest webRequest = new UnityWebRequest(baseUrl + "/game/" + gameName, UnityWebRequest.kHttpVerbDELETE);
@@ -27,11 +25,8 @@ public class ReturnToMainMenuAndDeleteGame : MonoBehaviour {
 
         yield return webRequest.Send();
 
-        Debug.Log("Server responded");
-
         if (webRequest.responseCode == 200 || webRequest.responseCode == 404)
         {
-            Debug.Log("Success!");
             SceneManager.LoadScene(SCENE_MAIN_MENU);
         }
 

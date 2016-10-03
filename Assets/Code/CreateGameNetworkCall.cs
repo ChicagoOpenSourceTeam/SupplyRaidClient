@@ -10,7 +10,6 @@ public class CreateGameNetworkCall : MonoBehaviour {
 	public const int SCENE_HOST_USER_NAME = 2;
     public static string GAME_NAME_KEY = "gameName";
 
-    string baseUrl;
     public GameObject errorDialog;
 	private DisplayErrorDialog displayErrorDialog;
     public Button button;
@@ -19,12 +18,6 @@ public class CreateGameNetworkCall : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		#if UNITY_EDITOR
-			baseUrl = "http://localhost:8080";
-		#elif UNITY_WEBGL
-			baseUrl = "http://supply-attack-server.herokuapp.com";
-		#endif
-
 		displayErrorDialog = errorDialog.GetComponent<DisplayErrorDialog> ();
 	}
 	
@@ -35,24 +28,24 @@ public class CreateGameNetworkCall : MonoBehaviour {
 
 
 	public IEnumerator upload() {
-		UnityWebRequest webRequest = new UnityWebRequest (baseUrl + "/game", UnityWebRequest.kHttpVerbPOST);
 		CreateGameRequest createGameRequest = new CreateGameRequest ();
 		createGameRequest.gameName = field.text;
-		string json = JsonUtility.ToJson (createGameRequest);
 
-		UploadHandler uploadHandler = new UploadHandlerRaw (Encoding.UTF8.GetBytes(json));
-		DownloadHandler downloadHandler = new DownloadHandlerBuffer ();
-		webRequest.uploadHandler = uploadHandler;
-		webRequest.downloadHandler = downloadHandler;
-		webRequest.SetRequestHeader ("Content-Type", "application/json");
+		RESTClient<CreateGameRequest> client = new RESTClient<CreateGameRequest> ();
 
-		yield return webRequest.Send ();
+		yield return client
+			.SetEndpoint ("/game")
+			.SetMethods (UnityWebRequest.kHttpVerbPOST)
+			.SetUploadData (createGameRequest)
+			.sendRequest();
 
-		if (webRequest.responseCode == 200) {
+		client.handleResponse();
+
+		if (client.responseCode == 200) {
             PlayerPrefs.SetString(GAME_NAME_KEY, createGameRequest.gameName);
 			SceneManager.LoadScene (SCENE_HOST_USER_NAME);
         }
-        else if (webRequest.responseCode == 409) {
+        else if (client.responseCode == 409) {
 			displayErrorDialog.displayErrorMessage ("Game name already taken.");
 		} else {
 			displayErrorDialog.displayErrorMessage ("Unknown error. Try again later.");

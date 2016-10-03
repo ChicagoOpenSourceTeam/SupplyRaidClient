@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 
 public class RESTClient<RequestType> {
@@ -10,7 +11,7 @@ public class RESTClient<RequestType> {
 	private string endpoint;
 	private RequestType uploadData;
 	public long responseCode { set; get; }
-	private UnityWebRequest webRequest { set; get; }
+	public UnityWebRequest webRequest { set; get; }
 	public string response { get; set; }
 
 	public RESTClient() {
@@ -40,13 +41,11 @@ public class RESTClient<RequestType> {
 	public void handleResponse() {
 		this.responseCode = webRequest.responseCode;
 
-		if (webRequest.GetResponseHeader ("Set-Cookie") != null) {
-			SessionHolder.sessionCookie = webRequest.GetResponseHeader("Set-Cookie").Split(';')[0]	;
+		if (webRequest.GetResponseHeader ("X-Auth-Token") != null) {
+			SessionHolder.sessionCookie = webRequest.GetResponseHeader("X-Auth-Token");
 		}
 
 		response = (Encoding.UTF8.GetString(webRequest.downloadHandler.data));
-
-		Debug.Log("session cookie set to: " + SessionHolder.sessionCookie);
 	}
 
 	public AsyncOperation sendRequest() {
@@ -64,16 +63,9 @@ public class RESTClient<RequestType> {
 		webRequest.SetRequestHeader ("Content-Type", "application/json");
 
 		if (SessionHolder.sessionCookie != null && SessionHolder.sessionCookie != "") {
-			webRequest.SetRequestHeader ("Cookie", SessionHolder.sessionCookie);
+			webRequest.SetRequestHeader ("X-Auth-Token", SessionHolder.sessionCookie);
 		}
 
-		Debug.Log ("Cookie header is: " + webRequest.GetRequestHeader("Cookie"));
-
 		return webRequest.Send ();
-	}
-
-	void Start() {
-	}
-	void Update() {
 	}
 }

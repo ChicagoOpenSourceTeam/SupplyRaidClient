@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using UnityEngine.UI;
 using UnityEngine.Networking;
@@ -31,8 +32,6 @@ public class JoinGameAndEnterWaitingRoomOnSuccess : MonoBehaviour {
 			.sendRequest();
 
 		client.handleResponse();
-
-		Debug.Log (client.responseCode);
 
         displayErrorDialog = errorDialog.GetComponent<DisplayErrorDialog>();
 
