@@ -31,7 +31,7 @@ public class CreateGameNetworkCall : MonoBehaviour {
 		CreateGameRequest createGameRequest = new CreateGameRequest ();
 		createGameRequest.gameName = field.text;
 
-		RESTClient<CreateGameRequest> client = new RESTClient<CreateGameRequest> ();
+		RESTClient<CreateGameRequest> client = new RESTClient<CreateGameRequest>();
 
 		yield return client
 			.SetEndpoint ("/game")

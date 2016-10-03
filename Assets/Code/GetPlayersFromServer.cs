@@ -7,9 +7,6 @@ using System;
 public class GetPlayersFromServer : MonoBehaviour {
 
     string baseUrl;
-    public GameObject errorDialog;
-    private DisplayErrorDialog displayErrorDialog;
-
 	public Text player1Text;
 	public Text player2Text;
 	public Text player3Text;
@@ -22,7 +19,7 @@ public class GetPlayersFromServer : MonoBehaviour {
 
 	private IEnumerator download()
     {
-		RESTClient<PlayerResponse> client = new RESTClient<PlayerResponse>();
+		RESTClient<object> client = new RESTClient<object>();
 
 		yield return client.SetEndpoint ("/players").SetMethods (UnityWebRequest.kHttpVerbGET).sendRequest();
 

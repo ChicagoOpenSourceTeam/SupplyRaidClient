@@ -30,7 +30,7 @@ public class PostPlayerAndEnterWaitingRoomOnSuccess : MonoBehaviour {
         createPlayerRequest.playerName = field.text;
         createPlayerRequest.gameName = PlayerPrefs.GetString(CreateGameNetworkCall.GAME_NAME_KEY);
 
-		RESTClient<CreatePlayerRequest> client = new RESTClient<CreatePlayerRequest> ();
+		RESTClient<CreatePlayerRequest> client = new RESTClient<CreatePlayerRequest>();
 
 		yield return client
 			.SetEndpoint ("/players")

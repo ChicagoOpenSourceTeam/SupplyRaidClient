@@ -16,9 +16,9 @@ public class RESTClient<RequestType> {
 
 	public RESTClient() {
 		#if UNITY_EDITOR
-		baseUrl = "http://localhost:8080";
+			baseUrl = "http://localhost:8080";
 		#elif UNITY_WEBGL
-		baseUrl = "http://supply-attack-server.herokuapp.com";
+			baseUrl = "http://supply-attack-server.herokuapp.com";
 		#endif
 
 	}
