@@ -3,9 +3,11 @@ using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.Networking;
 using System;
+using UnityEngine.SceneManagement;
 
 public class GetGameFromServer : MonoBehaviour {
 
+	public static int GAME_BOARD_SCENE = 5;
     string baseUrl;
 
     // Use this for initialization
@@ -19,6 +21,16 @@ public class GetGameFromServer : MonoBehaviour {
 
 		yield return client.SetEndpoint ("/game").SetMethods (UnityWebRequest.kHttpVerbGET).sendRequest();
 
+		client.handleResponse ();
+
+		if (client.responseCode == 200) {
+			GameResponse gameResponse = JsonUtility.FromJson<GameResponse>(client.response);
+
+			if (gameResponse.gameStarted) {
+				SceneManager.LoadScene (GAME_BOARD_SCENE);
+			}
+		}
+
 		StartCoroutine (waitAndTryAgain ());
     }	
 
@@ -30,5 +42,10 @@ public class GetGameFromServer : MonoBehaviour {
     // Update is called once per frame
     void Update () {
 	
+	}
+
+	[Serializable]
+	public class GameResponse {
+		public bool gameStarted;
 	}
 }
