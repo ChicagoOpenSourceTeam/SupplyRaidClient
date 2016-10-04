@@ -9,8 +9,7 @@ public class PostPlayerAndEnterWaitingRoomOnSuccess : MonoBehaviour {
 
     public const int SCENE_PLAYER_WAITING_ROOM = 3;
 
-    string baseUrl;
-    public GameObject errorDialog;
+	public GameObject errorDialog;
     private DisplayErrorDialog displayErrorDialog;
     public Button button;
     public InputField field;
@@ -26,29 +25,29 @@ public class PostPlayerAndEnterWaitingRoomOnSuccess : MonoBehaviour {
 
 
     public IEnumerator upload()
-    {
-        UnityWebRequest webRequest = new UnityWebRequest(baseUrl + "/players", UnityWebRequest.kHttpVerbPOST);
+	{
         CreatePlayerRequest createPlayerRequest = new CreatePlayerRequest();
         createPlayerRequest.playerName = field.text;
         createPlayerRequest.gameName = PlayerPrefs.GetString(CreateGameNetworkCall.GAME_NAME_KEY);
-        string json = JsonUtility.ToJson(createPlayerRequest);
 
-        UploadHandler uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(json));
-        DownloadHandler downloadHandler = new DownloadHandlerBuffer();
-        webRequest.uploadHandler = uploadHandler;
-        webRequest.downloadHandler = downloadHandler;
-        webRequest.SetRequestHeader("Content-Type", "application/json");
+		RESTClient<CreatePlayerRequest> client = new RESTClient<CreatePlayerRequest>();
 
-        yield return webRequest.Send();
+		yield return client
+			.SetEndpoint ("/players")
+			.SetMethods (UnityWebRequest.kHttpVerbPOST)
+			.SetUploadData (createPlayerRequest)
+			.sendRequest();
+
+		client.handleResponse();
 
         displayErrorDialog = errorDialog.GetComponent<DisplayErrorDialog>();
 
-        if (webRequest.responseCode == 200)
+        if (client.responseCode == 200)
         {
             PlayerPrefs.SetString("hostPlayerName", createPlayerRequest.playerName);
             SceneManager.LoadScene(SCENE_PLAYER_WAITING_ROOM);
         }
-        else if (webRequest.responseCode == 409)
+        else if (client.responseCode == 409)
         {
             displayErrorDialog.displayErrorMessage("Player name already taken.");
         }
@@ -71,11 +70,6 @@ public class PostPlayerAndEnterWaitingRoomOnSuccess : MonoBehaviour {
 
     void Start()
     {
-        #if UNITY_EDITOR
-                baseUrl = "http://localhost:8080";
-        #elif UNITY_WEBGL
-		        baseUrl = "http://supply-attack-server.herokuapp.com";
-        #endif
     }
 
     public class CreatePlayerRequest
