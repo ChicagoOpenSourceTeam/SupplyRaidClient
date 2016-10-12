@@ -39,11 +39,7 @@ public class CreateGameNetworkCall : MonoBehaviour {
 			.SetUploadData (createGameRequest)
 			.sendRequest();
 
-<<<<<<< HEAD
-		yield return webRequest.Send();
-=======
 		client.handleResponse();
->>>>>>> features/display-player-names-in-lobby
 
 		if (client.responseCode == 200) {
             PlayerPrefs.SetString(GAME_NAME_KEY, createGameRequest.gameName);

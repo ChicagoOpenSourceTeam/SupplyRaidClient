@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class ReturnToMainMenuAndDeleteGame : MonoBehaviour {
     public static int SCENE_MAIN_MENU = 0;
-    string baseUrl;
 
 
     // Use this for initialization
@@ -17,15 +16,16 @@ public class ReturnToMainMenuAndDeleteGame : MonoBehaviour {
     private IEnumerator delete() {
         string gameName = PlayerPrefs.GetString(CreateGameNetworkCall.GAME_NAME_KEY);
 
-        UnityWebRequest webRequest = new UnityWebRequest(baseUrl + "/game/" + gameName, UnityWebRequest.kHttpVerbDELETE);
-        
-        DownloadHandler downloadHandler = new DownloadHandlerBuffer();
-        webRequest.downloadHandler = downloadHandler;
-        webRequest.SetRequestHeader("Content-Type", "application/json");
+		RESTClient<object> client = new RESTClient<object>();
 
-        yield return webRequest.Send();
+		yield return client
+			.SetEndpoint ("/game/"+gameName)
+			.SetMethods (UnityWebRequest.kHttpVerbDELETE)
+			.sendRequest();
 
-        if (webRequest.responseCode == 200 || webRequest.responseCode == 404)
+		client.handleResponse();
+
+        if (client.responseCode == 200 || client.responseCode == 404)
         {
             SceneManager.LoadScene(SCENE_MAIN_MENU);
         }
@@ -33,11 +33,6 @@ public class ReturnToMainMenuAndDeleteGame : MonoBehaviour {
     }
 
     void Start () {
-		#if UNITY_EDITOR
-			baseUrl = "http://localhost:8080";
-		#elif UNITY_WEBGL
-			baseUrl = "http://supply-attack-server.herokuapp.com";
-		#endif
 	}
 	
 	// Update is called once per frame

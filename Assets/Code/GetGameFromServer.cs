@@ -23,10 +23,13 @@ public class GetGameFromServer : MonoBehaviour {
 
 		client.handleResponse ();
 
+		Debug.Log ("getting game");
 		if (client.responseCode == 200) {
+			Debug.Log ("200");
 			GameResponse gameResponse = JsonUtility.FromJson<GameResponse>(client.response);
 
 			if (gameResponse.gameStarted) {
+				Debug.Log ("game started");
 				SceneManager.LoadScene (GAME_BOARD_SCENE);
 			}
 		}
