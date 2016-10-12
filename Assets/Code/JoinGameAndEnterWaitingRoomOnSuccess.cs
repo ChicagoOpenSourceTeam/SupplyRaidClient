@@ -37,6 +37,7 @@ public class JoinGameAndEnterWaitingRoomOnSuccess : MonoBehaviour {
 
         if (client.responseCode == 200)
         {
+			PlayerPrefs.SetString("isHost", "false");
             SceneManager.LoadScene(SCENE_PLAYER_WAITING_ROOM);
         }
 		else if (client.responseCode == 409)

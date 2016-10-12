@@ -14,10 +14,18 @@ public class GetPlayersFromServer : MonoBehaviour {
 	public Text player3Text;
 	public Text player4Text;
 
+	public Button buttonStartGame;
+
     // Use this for initialization
     void Start () {
+
+		if (PlayerPrefs.GetString ("isHost") == "false") {
+			buttonStartGame.gameObject.SetActive(false);
+		}
         StartCoroutine(download());
+	
 	}
+		
 
 	private IEnumerator download()
     {

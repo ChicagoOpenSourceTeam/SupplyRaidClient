@@ -44,7 +44,7 @@ public class PostPlayerAndEnterWaitingRoomOnSuccess : MonoBehaviour {
 
         if (client.responseCode == 200)
         {
-            PlayerPrefs.SetString("hostPlayerName", createPlayerRequest.playerName);
+            PlayerPrefs.SetString("isHost", "true");
             SceneManager.LoadScene(SCENE_PLAYER_WAITING_ROOM);
         }
         else if (client.responseCode == 409)
