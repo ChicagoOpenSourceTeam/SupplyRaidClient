@@ -18,7 +18,7 @@ public class GetBoard : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (boardResponse != null) {
+		if (boardResponse.territories.Length != 0) {
 			canvas.gameObject.SetActive (false);
 //			canvas.GetComponent<Canvas> ().enabled = false;
 		} 
