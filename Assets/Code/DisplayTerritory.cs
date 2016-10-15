@@ -29,6 +29,7 @@ public class DisplayTerritory : MonoBehaviour {
 //		}
 		foreach (GetBoard.TerritoryResponse territory in board.boardResponse.territories) {
 			if (territory.name.Equals (name)) {
+
 				if (territory.playerNumber == 0) {
 					GetComponent<SpriteRenderer> ().sprite = unoccupied;
 				} else if (territory.supplied == false) {
@@ -36,6 +37,16 @@ public class DisplayTerritory : MonoBehaviour {
 				} else {
 					GetComponent<SpriteRenderer> ().sprite = supplied;
 				}
+
+				if (territory.troops == 0) {
+					transform.FindChild ("TroopsIcon").gameObject.SetActive (false);
+					transform.FindChild ("TroopsNumber").gameObject.SetActive (false);
+				} else {
+					transform.FindChild ("TroopsIcon").gameObject.SetActive (true);
+					transform.FindChild ("TroopsNumber").gameObject.SetActive (true);
+					transform.FindChild ("TroopsNumber").GetComponent<TextMesh> ().text = territory.troops.ToString();
+				}
+
 				if (territory.supplyDepot == true) {
 					transform.FindChild ("SupplyIcon").gameObject.SetActive (true);
 				} else {
